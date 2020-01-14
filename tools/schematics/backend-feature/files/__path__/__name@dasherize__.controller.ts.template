@@ -9,7 +9,7 @@ export class <%=classify(name)%>Controller {
     private service: <%=classify(name)%>Service,
   ) { }
 
-  @Get(':id')
+  @Get('detail')
   async getOne(@Query() dto: ApiInterfaces.Get<%=classify(name)%>DetailsDto): Promise<ApiInterfaces.Get<%=classify(name)%>DetailsResultDto> {
     return await this.service.getOne(dto);
   }

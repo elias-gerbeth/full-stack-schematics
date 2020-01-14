@@ -7,7 +7,7 @@ export namespace <%=classify(name)%>Actions {
   }
   export class Save {
     public static readonly type = '[<%=classify(name)%> Details] Save';
-    constructor(public <%=camelize(name)%>:ApiInterfaces.<%=classify(name)%>) { }
+    constructor(public <%=camelize(name)%>: ApiInterfaces.<%=classify(name)%>) { }
   }
   export class Remove {
     public static readonly type = '[<%=classify(name)%> Details] Remove';

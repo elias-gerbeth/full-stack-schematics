@@ -11,8 +11,8 @@ import { <%= classify(name) %>ListComponent } from './<%= dasherize(name) %>-lis
 import { <%= classify(name) %>State } from './+state/<%= dasherize(name) %>.state';
 
 const routes: Routes = [
-  { path: ':domain/<%= dasherize(name) %>', component: <%= classify(name) %>ListComponent },
-  { path: ':domain/<%= dasherize(name) %>/:id', component: <%= classify(name) %>DetailsComponent },
+  { path: '', component: <%= classify(name) %>ListComponent },
+  { path: ':id', component: <%= classify(name) %>DetailsComponent },
 ];
 
 @NgModule({
