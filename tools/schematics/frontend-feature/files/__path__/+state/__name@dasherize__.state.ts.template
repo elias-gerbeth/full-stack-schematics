@@ -49,7 +49,7 @@ export class <%=classify(name)%>State {
   public async remove({ patchState, getState }: StateContext<<%=classify(name)%>StateModel>, { id }: <%=classify(name)%>Actions.Remove) {
     const { <%=camelize(name)%>s } = getState();
     const { removedCount } = await this.<%=camelize(name)%>Api.remove<%=classify(name)%>({ id });
-    if (removedCount > 0){
+    if (removedCount > 0) {
       patchState({ <%=camelize(name)%>s: [...<%=camelize(name)%>s.filter(x => x.id !== id)] });
     }
   }

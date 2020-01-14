@@ -57,11 +57,11 @@ const lazyLoadInAppRoutes = (options: Schema) => {
     }
     let content = tree.read(path).toString();
     const lazyLoad = `
-  {
-    path: '${strings.dasherize(options.name)}',
-    loadChildren: () => import('@web-app/frontend/features/${strings.dasherize(options.name)}').then(m => m.FrontendFeature${strings.classify(options.name)}Module),
-    // canActivate: [AuthGuard]
-  },
+    {
+      path: '${strings.dasherize(options.name)}',
+      loadChildren: () => import('@my-app/frontend/features/${strings.dasherize(options.name)}').then(m => m.FrontendFeature${strings.classify(options.name)}Module),
+      // canActivate: [AuthGuard]
+    },
 `;
     content = content.replace(/];\s*$/, lazyLoad + '\n];\n');
     tree.overwrite(path, content);

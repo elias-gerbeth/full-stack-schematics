@@ -4,6 +4,7 @@ import { ApiService } from '../backend-api.service';
 
 @Injectable()
 export class <%=classify(name)%>ApiService {
+    
     constructor(private api: ApiService) { }
 
     get<%=classify(name)%>List = this.api.generate<ApiInterfaces.Get<%=classify(name)%>ListDto, ApiInterfaces.Get<%=classify(name)%>ListResultDto>('<%=dasherize(name)%>', 'GET');
