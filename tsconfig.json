@@ -15,7 +15,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@api-interfaces": ["libs/shared/api-interfaces/src/index.ts"],
+      "@database": ["libs/backend/data-access/database/src/index.ts"],
+      "@api": ["libs/frontend/data-access/api/src/index.ts"],
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

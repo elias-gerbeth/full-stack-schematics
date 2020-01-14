@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "name": "my-schematics",
+  "version": "0.0.1",
+  "extends": ["@nrwl/schematics"],
+  "schematics": {
+    "lambda": {
+      "factory": "../../dist/out-tsc/tools/schematics/lambda",
+      "schema": "./lambda/schema.json",
+      "description": "Scaffolds out a new app with a lambda function declared. Adds the lambda.yml file to serverless.yml."
+    }
+  }
+}

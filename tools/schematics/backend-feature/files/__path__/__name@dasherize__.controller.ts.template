@@ -1,0 +1,31 @@
+import { Controller, Get, Post, Delete, Body, Query } from '@nestjs/common';
+import * as ApiInterfaces from '@api-interfaces';
+import { <%=classify(name)%>Service } from './<%=dasherize(name)%>.service';
+
+@Controller('<%=dasherize(name)%>')
+export class <%=classify(name)%>Controller {
+
+  constructor(
+    private service: <%=classify(name)%>Service,
+  ) { }
+
+  @Get(':id')
+  async getOne(@Query() dto: ApiInterfaces.Get<%=classify(name)%>DetailsDto): Promise<ApiInterfaces.Get<%=classify(name)%>DetailsResultDto> {
+    return await this.service.getOne(dto);
+  }
+
+  @Get('')
+  async getMany(@Query() dto: ApiInterfaces.Get<%=classify(name)%>ListDto): Promise<ApiInterfaces.Get<%=classify(name)%>ListResultDto> {
+    return await this.service.getMany(dto);
+  }
+
+  @Post('')
+  async save(@Body() dto: ApiInterfaces.Save<%=classify(name)%>Dto): Promise<ApiInterfaces.Save<%=classify(name)%>ResultDto> {
+    return await this.service.save(dto);
+  }
+
+  @Delete('')
+  async remove(@Body() dto: ApiInterfaces.Remove<%=classify(name)%>Dto): Promise<ApiInterfaces.Remove<%=classify(name)%>ResultDto> {
+    return await this.service.remove(dto);
+  }
+}

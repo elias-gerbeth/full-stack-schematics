@@ -1,0 +1,17 @@
+<h4 class="mb-4">{{domain}} - <%= classify(name) %></h4>
+<div *ngIf="loading$ | async" class="d-flex justify-content-center align-items-center">
+  <fa-icon [icon]="['fas','circle-notch']" [spin]="true"></fa-icon>
+</div>
+<ng-container *ngIf="!(loading$ | async)">
+  <div class="card mb-3 shadow-sm border-0" *ngFor="let item of (<%= camelize(name) %>s$ | async)">
+    <a class="d-flex align-items-center" [href]="item.url" target="_blank">
+      <img *ngIf="item.img" [src]="item.img" width="150">
+      <div class="p-4 min-width-0">
+        <div class="text-truncate fsize-16">{{item.title}}</div>
+        <div *ngFor="let k of Object.keys(item)" class="text-truncate fsize-14 text-muted">{{k}}: {{item[k]}}</div>
+      </div>
+    </a>
+  </div>
+  <ngb-pagination [page]="page$ | async" (pageChange)="pageChange($event)" [boundaryLinks]="true" [maxSize]="10"
+    [pageSize]="20" [collectionSize]="total$ | async"></ngb-pagination>
+</ng-container>

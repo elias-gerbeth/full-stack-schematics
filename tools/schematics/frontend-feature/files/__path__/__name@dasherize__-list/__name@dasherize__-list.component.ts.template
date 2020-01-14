@@ -1,0 +1,53 @@
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
+import { RouterState, Navigate } from '@ngxs/router-plugin';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { <%= classify(name) %>State } from '../+state/<%= dasherize(name) %>.state';
+import { <%= classify(name) %> } from '@api-interfaces';
+import { <%= classify(name) %>Actions } from '../+state/<%= dasherize(name) %>.actions';
+import { actionsExecuting, ActionsExecuting } from '@ngxs-labs/actions-executing';
+
+@Component({
+  selector: 'web-app-<%= dasherize(name) %>-list',
+  templateUrl: './<%= dasherize(name) %>-list.component.html',
+  styleUrls: ['./<%= dasherize(name) %>-list.component.scss']
+})
+export class <%= classify(name) %>ListComponent implements OnDestroy {
+
+  @Select(RouterState.state)
+  router$: Observable<RouterStateSnapshot>;
+
+  @Select(actionsExecuting([<%= classify(name) %>Actions.Load]))
+  loading$: Observable<ActionsExecuting>;
+
+  @Select(<%= classify(name) %>State.<%= camelize(name) %>s$)
+  <%= camelize(name) %>s$: Observable<<%= classify(name) %>[]>;
+
+  @Select(<%= classify(name) %>State.total$)
+  total$: Observable<number>;
+
+  @Select(<%= classify(name) %>State.page$)
+  page$: Observable<number>;
+
+  page = 1;
+  perPage = 10;
+
+  destroy$ = new Subject();
+  constructor(private store: Store) {
+    this.router$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
+      this.page = state.root.firstChild.firstChild.queryParams.page || 1;
+      this.store.dispatch(new <%= classify(name) %>Actions.Load(this.page, this.perPage));
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  pageChange(page) {
+    this.store.dispatch(new Navigate(['<%= dasherize(name) %>'], { page }));
+  }
+}

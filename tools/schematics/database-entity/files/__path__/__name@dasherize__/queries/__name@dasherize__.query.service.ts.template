@@ -1,0 +1,34 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+// Always use barrel file for importing Entities to prevent circular dependencies
+import * as Entities from '../../entities';
+
+@Injectable()
+export class <%= classify(name) %>QueryService {
+    constructor(
+        @InjectRepository(Entities.<%= classify(name) %>Entity)
+        private repo: Repository<Entities.<%= classify(name) %>Entity>,
+    ) { }
+
+    async getDetails(id: string) {
+        return await this.repo.findOne({ where: { id } });
+    }
+
+    async getList(page: number, perPage: number) {
+        return await this.repo.findAndCount({ take: perPage, skip: (page - 1) * perPage });
+    }
+
+    async save(item: Entities.<%= classify(name) %>Entity) {
+        return await this.repo.save(item);
+    }
+
+    async remove(id: string) {
+        return await this.repo.delete(id);
+    }
+
+    async update(id: string, update: Partial<Entities.<%= classify(name) %>Entity>) {
+        return await this.repo.update(id, update);
+    }
+}

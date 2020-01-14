@@ -1,0 +1,16 @@
+import * as ApiInterfaces from '@api-interfaces';
+
+export namespace <%=classify(name)%>Actions {
+  export class Load {
+    public static readonly type = '[<%=classify(name)%> List] Load';
+    constructor(public page: number, public perPage: number = 10) { }
+  }
+  export class Save {
+    public static readonly type = '[<%=classify(name)%> Details] Save';
+    constructor(public <%=camelize(name)%>:ApiInterfaces.<%=classify(name)%>) { }
+  }
+  export class Remove {
+    public static readonly type = '[<%=classify(name)%> Details] Remove';
+    constructor(public id: string) { }
+  }
+}

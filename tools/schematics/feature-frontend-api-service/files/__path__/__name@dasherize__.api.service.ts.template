@@ -1,0 +1,13 @@
+import { Injectable } from '@angular/core';
+import * as ApiInterfaces from '@api-interfaces';
+import { ApiService } from '../backend-api.service';
+
+@Injectable()
+export class <%=classify(name)%>ApiService {
+    constructor(private api: ApiService) { }
+
+    get<%=classify(name)%>List = this.api.generate<ApiInterfaces.Get<%=classify(name)%>ListDto, ApiInterfaces.Get<%=classify(name)%>ListResultDto>('<%=dasherize(name)%>', 'GET');
+    get<%=classify(name)%>Details = this.api.generate<ApiInterfaces.Get<%=classify(name)%>DetailsDto, ApiInterfaces.Get<%=classify(name)%>DetailsResultDto>('<%=dasherize(name)%>', 'GET');
+    save<%=classify(name)%> = this.api.generate<ApiInterfaces.Save<%=classify(name)%>Dto, ApiInterfaces.Save<%=classify(name)%>ResultDto>('<%=dasherize(name)%>', 'POST');
+    remove<%=classify(name)%> = this.api.generate<ApiInterfaces.Remove<%=classify(name)%>Dto, ApiInterfaces.Remove<%=classify(name)%>ResultDto>('<%=dasherize(name)%>', 'DELETE');
+}

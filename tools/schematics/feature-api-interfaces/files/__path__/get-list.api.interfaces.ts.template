@@ -1,0 +1,10 @@
+import { <%=classify(name)%> } from './entity.api.interfaces';
+
+export interface Get<%=classify(name)%>ListDto {
+    page: number;
+    perPage: number;
+}
+export interface Get<%=classify(name)%>ListResultDto {
+    <%=camelize(name)%>s: <%=classify(name)%>[];
+    total: number;
+}

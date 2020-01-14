@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "feature-api-interfaces",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    }
+  },
+  "required": ["name"]
+}

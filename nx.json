@@ -10,5 +10,27 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "shared-api-interfaces": {
+      "tags": []
+    },
+    "web-app-e2e": {
+      "tags": []
+    },
+    "web-app": {
+      "tags": []
+    },
+    "api": {
+      "tags": []
+    },
+    "backend-data-access-database": {
+      "tags": []
+    },
+    "frontend-data-access-api": {
+      "tags": []
+    },
+    "backend-features-user": {
+      "tags": []
+    }
+  }
 }

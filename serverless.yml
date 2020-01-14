@@ -1,0 +1,135 @@
+service: # TODO:
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev # default stage, see ${self:custom.stage}
+  region: us-east-1 # default region, see ${self:custom.region}
+  memorySize: 128 # save costs
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "sqs:ReceiveMessage"
+        - "sqs:SendMessage"
+        - "sqs:GetQueueUrl"
+        # - "sqs:DeleteMessage"
+        # - "sqs:ListQueues"
+      Resource:
+        - Fn::GetAtt:
+            - SQSQueue
+            - Arn
+
+# FUNCTIONS
+functions:
+  api: ${file(apps/api/src/lambda-functions/lambda.yml)}
+
+# PLUGINS
+plugins:
+  - serverless-webpack
+  - serverless-offline-scheduler
+  - serverless-offline-sqs
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-resources-env
+  - serverless-stack-output
+
+# SETTINGS
+custom:
+  region: ${self:provider.region}
+  stage: ${opt:stage, self:provider.stage}
+  prefix: ${self:service}-${self:custom.stage}
+  sqs: ${self:custom.prefix}-sqs
+  cognito: ${self:custom.prefix}-userpool
+
+  # Plugin settings
+  # - webpack configuration
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    packager: 'npm'
+    packExternalModulesMaxBuffer: 204800
+
+  # write outputs to apps/web-app/src/environments/environment.${stage}.ts
+  output:
+    handler: scripts/serverless-output.handler
+
+    # - Offline SQS --> has to start a local elasticMQ server: https://github.com/softwaremill/elasticmq
+  # $ java -jar elasticmq-server-0.15.3.jar -Dconfig.file=sqs.conf
+  serverless-offline-sqs:
+    autoCreate: true # create queue if not exists
+    apiVersion: '2012-11-05'
+    endpoint: http://localhost:9324
+    region: ${self:custom.region}
+    accessKeyId: root # fake access key for local/offline
+    secretAccessKey: root # fake access key for local/offline
+    skipCacheInvalidation: false
+
+# RESOURCES
+resources:
+  Resources:
+    # SQS
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:custom.sqs}
+        MessageRetentionPeriod: 1209600
+        VisibilityTimeout: 900
+        RedrivePolicy:
+          deadLetterTargetArn:
+            Fn::GetAtt:
+            - SQSQueueDeadLetterQueue
+            - Arn
+          maxReceiveCount: 10 
+    SQSQueueDeadLetterQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:custom.sqs}-dead-letter-queue
+        MessageRetentionPeriod: 1209600
+
+    # COGNITO
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.cognito}
+        # Set email as an alias
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: True
+            RequireNumbers: True
+            RequireSymbols: False
+            RequireUppercase: True
+
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:custom.cognito}-client
+        UserPoolId:
+          Ref: CognitoUserPool
+        ExplicitAuthFlows:
+          - ADMIN_NO_SRP_AUTH
+        GenerateSecret: false
+
+  # outputs for writing to frontend environment
+  Outputs:
+    CognitoUserPool:
+      Value:
+        Ref: CognitoUserPool
+    CognitoUserPoolClient:
+      Value:
+        Ref: CognitoUserPoolClient
+    BackendUrl:
+      Value:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Ref: ApiGatewayRestApi
+            - ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}"
+    Stage:
+      Value: ${self:custom.stage}
+    Region:
+      Value: ${self:custom.region}

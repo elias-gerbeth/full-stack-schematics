@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "add-route",
+  "type": "object",
+  "properties": {
+    "method": {
+      "type": "string",
+      "description": "HTTP Method: GET, POST, PUT, DELETE",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    },
+    "featureName": {
+      "type": "string",
+      "description": "Backend Feature name (backend feature module). E.g. 'products'",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "name": {
+      "type": "string",
+      "description": "Route name (optional, will be generated as method+feature if not specified)",
+      "$default": {
+        "$source": "argv",
+        "index": 2
+      }
+    }
+  },
+  "required": ["method", "featureName"]
+}

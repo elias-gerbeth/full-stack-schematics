@@ -1,0 +1,3 @@
+import * as Entities from '@database';
+
+export type <%=classify(name)%> = Entities.<%=classify(name)%>Entity;

@@ -1,0 +1,8 @@
+import { <%=classify(name)%> } from './entity.api.interfaces';
+
+export interface Save<%=classify(name)%>Dto {
+    <%=camelize(name)%>: <%=classify(name)%>;
+}
+export interface Save<%=classify(name)%>ResultDto {
+    <%=camelize(name)%>: <%=classify(name)%>;
+}

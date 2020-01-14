@@ -1,0 +1,8 @@
+import { <%=classify(name)%> } from './entity.api.interfaces';
+
+export interface Get<%=classify(name)%>DetailsDto {
+    id: string;
+}
+export interface Get<%=classify(name)%>DetailsResultDto {
+    <%=camelize(name)%>: <%=classify(name)%>;
+}

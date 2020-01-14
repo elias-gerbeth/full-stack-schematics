@@ -1,0 +1,34 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import { NgxsModule } from '@ngxs/store';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { <%= classify(name) %>DetailsComponent } from './<%= dasherize(name) %>-details/<%= dasherize(name) %>-details.component';
+import { <%= classify(name) %>ListComponent } from './<%= dasherize(name) %>-list/<%= dasherize(name) %>-list.component';
+import { <%= classify(name) %>State } from './+state/<%= dasherize(name) %>.state';
+
+const routes: Routes = [
+  { path: ':domain/<%= dasherize(name) %>', component: <%= classify(name) %>ListComponent },
+  { path: ':domain/<%= dasherize(name) %>/:id', component: <%= classify(name) %>DetailsComponent },
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    NgxsModule.forFeature([<%= classify(name) %>State]),
+    FontAwesomeModule,
+    NgbPaginationModule,
+  ],
+  declarations: [<%= classify(name) %>ListComponent, <%= classify(name) %>DetailsComponent],
+})
+export class FrontendFeature<%= classify(name) %>Module {
+  constructor(library: FaIconLibrary) {
+    library.addIcons(
+      faCircleNotch,
+    );
+  }
+}

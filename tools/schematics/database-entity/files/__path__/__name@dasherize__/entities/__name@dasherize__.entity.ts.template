@@ -1,0 +1,19 @@
+import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+// Use barrel file for importing other entities (OneToMany etc.) to prevent circular dependency issues
+// import * as Entities from '../../entities';
+
+@Entity()
+export class <%= classify(name) %>Entity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    // @UpdateDateColumn()
+    // updatedAt?: Date;
+    // @CreateDateColumn()
+    // createdAt?: Date;
+
+    // @Column()
+    // name: string;
+
+}

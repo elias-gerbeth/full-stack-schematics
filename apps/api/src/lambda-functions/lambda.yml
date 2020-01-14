@@ -1,0 +1,28 @@
+handler: apps/api/src/lambda-functions/index.handler
+events:
+  - http:
+      path: "api/{proxy+}"
+      method: any
+      # authorizer:
+      #   name: LambdaAuthorizer
+      #   arn:
+      #     Fn::GetAtt:
+      #       - CognitoUserPool
+      #       - Arn
+      cors:
+        origin: "*"
+        maxAge: 86400
+        headers:
+          - Authorization
+          - Content-Type
+          - X-Amz-Date
+          - X-Api-Key
+          - X-Amz-Security-Token
+          - X-Amz-User-Agent
+
+# CF_*** variables for runtime and local
+custom:
+  env-resources:
+    - SQSQueue # => will set process.env.CF_SQSQueue
+    - CognitoUserPool # => will set process.env.CF_CognitoUserPool
+    - CognitoUserPoolClient # => will set process.env.CF_CognitoUserPoolClient

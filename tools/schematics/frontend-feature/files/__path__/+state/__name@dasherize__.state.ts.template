@@ -1,0 +1,69 @@
+import { State, Action, Selector, StateContext } from '@ngxs/store';
+import { <%=classify(name)%>ApiService } from '@frontend/backend-api';
+import { <%=classify(name)%>Actions } from './<%=dasherize(name)%>.actions';
+
+import { <%=classify(entityName)%> } from '@api-interfaces';
+
+export interface <%=classify(name)%>StateModel {
+  <%=camelize(name)%>s: <%=classify(entityName)%>[];
+  total: number;
+  page: number;
+  perPage?: number;
+}
+
+@State<<%=classify(name)%>StateModel>({
+  name: '<%=dasherize(name)%>',
+  defaults: {
+    <%=camelize(name)%>s: [],
+    total: 0,
+    page: 1,
+    perPage: 10,
+  }
+})
+export class <%=classify(name)%>State {
+
+  constructor(private <%=camelize(name)%>Api: <%=classify(name)%>ApiService) { }
+
+  @Selector()
+  public static page$(state: <%=classify(name)%>StateModel) {
+    return state.page;
+  }
+
+  @Selector()
+  public static <%=camelize(name)%>s$(state: <%=classify(name)%>StateModel) {
+    return state.<%=camelize(name)%>s;
+  }
+
+  @Selector()
+  public static total$(state: <%=classify(name)%>StateModel) {
+    return state.total;
+  }
+
+  @Action(<%=classify(name)%>Actions.Load)
+  public async load({ patchState }: StateContext<<%=classify(name)%>StateModel>, { page, perPage }: <%=classify(name)%>Actions.Load) {
+    const { <%=camelize(name)%>s, total } = await this.<%=camelize(name)%>Api.get<%=classify(name)%>List({ page, perPage });
+    patchState({ <%=camelize(name)%>s: [...<%=camelize(name)%>s], total, page });
+  }
+
+  @Action(<%=classify(name)%>Actions.Remove)
+  public async remove({ patchState, getState }: StateContext<<%=classify(name)%>StateModel>, { id }: <%=classify(name)%>Actions.Remove) {
+    const { <%=camelize(name)%>s } = getState();
+    const { removedCount } = await this.<%=camelize(name)%>Api.remove<%=classify(name)%>({ id });
+    if(removedCount > 0){
+      patchState({ <%=camelize(name)%>s: [...<%=camelize(name)%>s.filter(x => x.id !== id)] });
+    }
+  }
+
+  @Action(<%=classify(name)%>Actions.Save)
+  public async save({ patchState, getState }: StateContext<<%=classify(name)%>StateModel>, payload: <%=classify(name)%>Actions.Save) {
+    const state = getState();
+    const { <%=camelize(name)%> } = await this.<%=camelize(name)%>Api.save<%=classify(name)%>({ <%=camelize(name)%>: payload.<%=camelize(name)%> });
+    patchState({ <%=camelize(name)%>s: [...state.<%=camelize(name)%>s.map(x => {
+      if(x.id !== <%=camelize(name)%>.id) {
+        return x;
+      } else {
+        return <%=camelize(name)%>;
+      }
+    })]});
+  }
+}

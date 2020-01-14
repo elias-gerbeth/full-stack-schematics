@@ -1,0 +1,31 @@
+import { Injectable, NotImplementedException } from '@nestjs/common';
+
+import { <%=classify(name)%>QueryService } from '@database';
+import * as ApiInterfaces from '@api-interfaces';
+
+@Injectable()
+export class <%=classify(name )%>Service {
+  constructor(
+    private query: <%=classify(name)%>QueryService,
+  ) { }
+
+  async getOne(dto: ApiInterfaces.Get<%=classify(name)%>DetailsDto): Promise<ApiInterfaces.Get<%=classify(name)%>DetailsResultDto> {
+    const <%=camelize(name)%> = await this.query.getDetails(dto.id);
+    return { <%=camelize(name)%> } as ApiInterfaces.Get<%=classify(name)%>DetailsResultDto;
+  }
+
+  async getMany(dto: ApiInterfaces.Get<%=classify(name)%>ListDto): Promise<ApiInterfaces.Get<%=classify(name)%>ListResultDto> {
+    const [<%=camelize(name)%>s, total] = await this.query.getList(dto.page, dto.perPage);
+    return { <%=camelize(name)%>s, total } as ApiInterfaces.Get<%=classify(name)%>ListResultDto;
+  }
+
+  async save(dto: ApiInterfaces.Save<%=classify(name)%>Dto): Promise<ApiInterfaces.Save<%=classify(name)%>ResultDto> {
+    const <%=camelize(name)%> = await this.query.save(dto.<%=camelize(name)%>);
+    return { <%=camelize(name)%> } as ApiInterfaces.Save<%=classify(name)%>ResultDto;
+  }
+
+  async remove(dto: ApiInterfaces.Remove<%=classify(name)%>Dto): Promise<ApiInterfaces.Remove<%=classify(name)%>ResultDto> {
+    const removeResult = await this.query.remove(dto.id);
+    return { removedCount: removeResult.affected } as ApiInterfaces.Remove<%=classify(name)%>ResultDto;
+  }
+}

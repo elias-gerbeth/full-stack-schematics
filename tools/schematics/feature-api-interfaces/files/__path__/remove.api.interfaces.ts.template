@@ -1,0 +1,6 @@
+export interface Remove<%=classify(name)%>Dto {
+    id: string;
+}
+export interface Remove<%=classify(name)%>ResultDto {
+    removedCount: number;
+}

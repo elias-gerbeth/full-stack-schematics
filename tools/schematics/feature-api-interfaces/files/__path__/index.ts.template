@@ -1,0 +1,5 @@
+export * from './entity.api.interfaces';
+export * from './get-list.api.interfaces';
+export * from './get-details.api.interfaces';
+export * from './save.api.interfaces';
+export * from './remove.api.interfaces';
