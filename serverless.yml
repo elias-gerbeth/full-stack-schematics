@@ -1,4 +1,4 @@
-service: # TODO:
+service: my-app # TODO: rename
 
 provider:
   name: aws

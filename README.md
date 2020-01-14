@@ -29,6 +29,7 @@ Basis of all names is: Feature-name in singular: [name] (e.g. "product")
 ## 1. Configure
 
 Configure the name of the app in the package.json ("name"), nx.json ("npmScope"), serverless.yml ("service") and angular.json ("prefix").
+You can conveniently run a "replace-all" from your IDE for "my-app" --> "your-app-name".
 
 ## How to use
 
