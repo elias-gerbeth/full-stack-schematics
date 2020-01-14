@@ -52,7 +52,7 @@ function addBackendFeatureModuleToApiModule(options: OptionsSchema) {
     let content = t.read(apiModulePath).toString();
     const featureModuleImport = `import { ${moduleName} } from '@${packageJson.name}/backend/features/${strings.dasherize(options.name)}';`;
     content = content.replace(/imports: \[([^\]]*)\]/, ($1, $2) => 'imports: [' + $2 + '\t' + moduleName + ',\n  ]');
-    content = content.replace(/from '@backend';/, ($1) => $1 + '\n' + featureModuleImport);
+    content = content.replace(/from '@database';/, ($1) => $1 + '\n' + featureModuleImport);
     t.overwrite(apiModulePath, content);
     return t;
   }
