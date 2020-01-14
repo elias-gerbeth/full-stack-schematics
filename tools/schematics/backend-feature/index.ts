@@ -51,8 +51,8 @@ function addBackendFeatureModuleToApiModule(options: OptionsSchema) {
     const packageJson = JSON.parse(t.read('package.json').toString());
     let content = t.read(apiModulePath).toString();
     const featureModuleImport = `import { ${moduleName} } from '@${packageJson.name}/backend/features/${strings.dasherize(options.name)}';`;
-    content = content.replace(/imports: \[([^\]]*)\]/, ($1, $2) => 'imports: [' + $2 + '\t' + featureModuleImport + ',\n  ]');
-    content = content.replace(/imports: \[(.*)\]/, ($1) => $1 + '\n' + moduleName + ',');
+    content = content.replace(/imports: \[([^\]]*)\]/, ($1, $2) => 'imports: [' + $2 + '\t' + moduleName + ',\n  ]');
+    content = content.replace(/from '@backend';/, ($1) => $1 + '\n' + featureModuleImport);
     t.overwrite(apiModulePath, content);
     return t;
   }

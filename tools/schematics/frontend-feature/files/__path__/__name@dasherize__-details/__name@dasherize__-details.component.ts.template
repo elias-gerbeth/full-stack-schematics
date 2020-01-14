@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'web-app-<%= dasherize(name) %>-details',
+  selector: 'my-app-<%= dasherize(name) %>-details',
   templateUrl: './<%= dasherize(name) %>-details.component.html',
   styleUrls: ['./<%= dasherize(name) %>-details.component.scss']
 })

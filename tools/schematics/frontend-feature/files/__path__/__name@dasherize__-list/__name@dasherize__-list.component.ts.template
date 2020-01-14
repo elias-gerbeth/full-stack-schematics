@@ -10,7 +10,7 @@ import { <%= classify(name) %>Actions } from '../+state/<%= dasherize(name) %>.a
 import { actionsExecuting, ActionsExecuting } from '@ngxs-labs/actions-executing';
 
 @Component({
-  selector: 'web-app-<%= dasherize(name) %>-list',
+  selector: 'my-app-<%= dasherize(name) %>-list',
   templateUrl: './<%= dasherize(name) %>-list.component.html',
   styleUrls: ['./<%= dasherize(name) %>-list.component.scss']
 })
@@ -38,6 +38,7 @@ export class <%= classify(name) %>ListComponent implements OnDestroy {
   constructor(private store: Store) {
     this.router$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
       this.page = state.root.firstChild.firstChild.queryParams.page || 1;
+      this.perPage = state.root.firstChild.firstChild.queryParams.perPage || 10;
       this.store.dispatch(new <%= classify(name) %>Actions.Load(this.page, this.perPage));
     });
   }
