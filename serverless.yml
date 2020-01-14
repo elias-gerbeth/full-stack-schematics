@@ -7,18 +7,19 @@ provider:
   region: us-east-1 # default region, see ${self:custom.region}
   memorySize: 128 # save costs
 
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - "sqs:ReceiveMessage"
-        - "sqs:SendMessage"
-        - "sqs:GetQueueUrl"
-        # - "sqs:DeleteMessage"
-        # - "sqs:ListQueues"
-      Resource:
-        - Fn::GetAtt:
-            - SQSQueue
-            - Arn
+  # Iam role for SQS (make sure to uncomment SQS at the Resources)
+  # iamRoleStatements:
+  #   - Effect: Allow
+  #     Action:
+  #       - "sqs:ReceiveMessage"
+  #       - "sqs:SendMessage"
+  #       - "sqs:GetQueueUrl"
+  #       # - "sqs:DeleteMessage"
+  #       # - "sqs:ListQueues"
+  #     Resource:
+  #       - Fn::GetAtt:
+  #           - SQSQueue
+  #           - Arn
 
 # FUNCTIONS
 functions:
@@ -28,7 +29,7 @@ functions:
 plugins:
   - serverless-webpack
   - serverless-offline-scheduler
-  - serverless-offline-sqs
+  # - serverless-offline-sqs
   - serverless-offline
   - serverless-dotenv-plugin
   - serverless-resources-env
@@ -53,38 +54,38 @@ custom:
   output:
     handler: scripts/serverless-output.handler
 
-    # - Offline SQS --> has to start a local elasticMQ server: https://github.com/softwaremill/elasticmq
+  # - Offline SQS --> has to start a local elasticMQ server: https://github.com/softwaremill/elasticmq
   # $ java -jar elasticmq-server-0.15.3.jar -Dconfig.file=sqs.conf
-  serverless-offline-sqs:
-    autoCreate: true # create queue if not exists
-    apiVersion: '2012-11-05'
-    endpoint: http://localhost:9324
-    region: ${self:custom.region}
-    accessKeyId: root # fake access key for local/offline
-    secretAccessKey: root # fake access key for local/offline
-    skipCacheInvalidation: false
+  # serverless-offline-sqs:
+  #   autoCreate: true # create queue if not exists
+  #   apiVersion: '2012-11-05'
+  #   endpoint: http://localhost:9324
+  #   region: ${self:custom.region}
+  #   accessKeyId: root # fake access key for local/offline
+  #   secretAccessKey: root # fake access key for local/offline
+  #   skipCacheInvalidation: false
 
 # RESOURCES
 resources:
   Resources:
     # SQS
-    SQSQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: ${self:custom.sqs}
-        MessageRetentionPeriod: 1209600
-        VisibilityTimeout: 900
-        RedrivePolicy:
-          deadLetterTargetArn:
-            Fn::GetAtt:
-            - SQSQueueDeadLetterQueue
-            - Arn
-          maxReceiveCount: 10 
-    SQSQueueDeadLetterQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: ${self:custom.sqs}-dead-letter-queue
-        MessageRetentionPeriod: 1209600
+    # SQSQueue:
+    #   Type: AWS::SQS::Queue
+    #   Properties:
+    #     QueueName: ${self:custom.sqs}
+    #     MessageRetentionPeriod: 1209600
+    #     VisibilityTimeout: 900
+    #     RedrivePolicy:
+    #       deadLetterTargetArn:
+    #         Fn::GetAtt:
+    #         - SQSQueueDeadLetterQueue
+    #         - Arn
+    #       maxReceiveCount: 10 
+    # SQSQueueDeadLetterQueue:
+    #   Type: AWS::SQS::Queue
+    #   Properties:
+    #     QueueName: ${self:custom.sqs}-dead-letter-queue
+    #     MessageRetentionPeriod: 1209600
 
     # COGNITO
     CognitoUserPool:
