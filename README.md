@@ -2,6 +2,8 @@
 
 ## Code Architecture
 
+"Convention over configuration."
+
 - separate into Apps and Libs. Apps are just a collection of feature modules and a shell module, backend and frontend. Apps can also be Lambda Functions, then they have a simple service defining the entry handler function.
 - Libs are separated into backend, frontend, and shared (API interfaces only). There are data-access libs (APIs, database, SQS, etc.), UI (frontend only), util and feature libs.
 - the database module consists of a entities and query-services, grouped in folders by feature name. There's a single module importing all entities and providing all query services. A barrel file for entities, query-services and interfaces makes importing query services and entities in the module easy, so it doesn't have to be defined multiple times when adding (done by schematics anyway).
@@ -10,19 +12,19 @@
 - frontend libs consist by default of a module importing the FontAwesomeModule and a setup constructor for adding icon libs. There's also a component for list and detail view, connected to the NGXS store and actions for loading the list and more details for single item. The store also manages pagination, and the list component is paginated by default. The list view shows a list of cards with key:value for every item. The state object has the handler for the load actions and calls the corresponding API functions with the feature name.
 - all feature libs, modules, services, components, state, api endpoint functions, api interfaces, controllers, controller routes, controller- and service functions, and entities follow a naming convention by feature name. At least when they are scaffolded by schematics. But also for later insertion of new routes, to make it easier to write schematics.
 
-Basis of all names is: Feature-name in singular: <name> (e.g. "product")
+Basis of all names is: Feature-name in singular: [name] (e.g. "product")
 
-Frontend lib: libs/frontend/<name>
-Frontend module: <Name>FrontendModule (ProductFrontendModule)
-Frontend List Component: <Name>ListComponent (ProductListComponent)
-Frontend Details Component: <Name>DetailsComponent (ProductDetailsomponent)
-Frontend State: +state/<name>.actions and +state/<name>.state
-Api Interfaces: Load: Get<Name>ListDto and Get<Name>ListResultDto, Get<Name>DetailsDto and Get<Name>DetailsResultDto, save: Save<Name>Dto and Save<Name>ResultDto, remove: Remove<Name>Dto
-Backend lib: libs/backend/<name>
-Controller+Module+Service: <Name>BackendModule <Name>Controller <Name>ControllerService
-Controller and service functions: getDetails(id), getList(page,perPage), save(obj), remove(id), update(id, obj)
-Entities: <Name>Entity with default primary generated uuid column "id" and prepared commented date fields and name field for starting quickly
-QueryService: <Name>QueryService with functions like controller service
+- Frontend lib: libs/frontend/[name]
+- Frontend module: [Name]FrontendModule (ProductFrontendModule)
+- Frontend List Component: [Name]ListComponent (ProductListComponent)
+- Frontend Details Component: [Name]DetailsComponent (ProductDetailsomponent)
+- Frontend State: +state/[name].actions and +state/[name].state
+- Api Interfaces: Load: Get[Name]ListDto and Get[Name]ListResultDto, Get[Name]DetailsDto and Get[Name]DetailsResultDto, save: Save[Name]Dto and Save[Name]ResultDto, remove: - Remove[Name]Dto
+- Backend lib: libs/backend/[name]
+- Controller+Module+Service: [Name]BackendModule [Name]Controller [Name]ControllerService
+- Controller and service functions: getDetails(id), getList(page,perPage), save(obj), remove(id), update(id, obj)
+- Entities: [Name]Entity with default primary generated uuid column "id" and prepared commented date fields and name field for starting quickly
+- QueryService: [Name]QueryService with functions like controller service
 
 ## 1. Configure
 
@@ -40,13 +42,13 @@ Configure the name of the app in the package.json ("name"), nx.json ("npmScope")
 
 ### Local development
 
-1. setup local SQS server
+1. (if you need SQS) setup local SQS server
 
-- Offline SQS --> download and start a local elasticMQ (SQS-compatible) server: https://github.com/softwaremill/elasticmq
-- start: ```npm run sqs:offline```
+Offline SQS --> download and start a local elasticMQ (SQS-compatible) server: https://github.com/softwaremill/elasticmq
 
-3. setup and configure a cognito user pool + client
-4. run the script: ```node scripts/jwk-to-pem.js YOUR_USER_POOL_ID``` with the dev user pool id --> insert result into .env
+start: ```npm run sqs:offline```
+
+3. setup and configure a cognito user pool + client in your AWS console. Then run the script: ```node scripts/jwk-to-pem.js YOUR_USER_POOL_ID``` with the dev user pool id. Copy result in ```.env``` into COGNITO_PEM
 
 2. Run web app: ```ng serve web-app```
 
@@ -95,8 +97,11 @@ Replace bucket name at YOUR_BUCKET_NAME_HERE!
 generate a new custom schematics: (with my template)
 ```nx workspace-schematic schematic-template <my-schematics-name>```
 
-- generate new entity + query service: ```npm run workspace-schematic -- database-entity <name>```
+- generate new entity + query service: ```npm run workspace-schematic -- database-entity [name]```
 
-- generate new backend feature with lib, module, controllers, service, entity (calls database-entity schematic): ```npm run workspace-schematic -- backend-feature <name>```
+- generate new backend feature with lib, module, controllers, service, entity (calls database-entity schematic): ```npm run workspace-schematic -- backend-feature [name]```
 
 - generate a new frontend feature:
+
+### Misc: How to remove a big file from all git commits (*this rips out the file from ALL commits, dangerous!*)
+```git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch *.jar'```
