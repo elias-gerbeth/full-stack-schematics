@@ -18,24 +18,15 @@ if (!result) {
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module, MiddlewareConsumer } from '@nestjs/common';
 
-import { FeatureUserModule, AuthMiddleware } from '@backend/features/user';
-import { getConnectionOptionsFromEnv } from '@backend/database';
+import { getConnectionOptionsFromEnv } from '@database';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: () => getConnectionOptionsFromEnv(),
     }),
-    FeatureUserModule,
     // Import other feature modules here
   ],
   providers: []
 })
-export class ApiModule {
-  configure(consumer: MiddlewareConsumer) {
-    // // Auth middleware first (Cognito JWT decode & verify)
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes('*');
-  }
-}
+export class ApiModule { }

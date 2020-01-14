@@ -36,6 +36,24 @@ export default function (options: OptionsSchema): Rule {
       }),
       applyAndMergeTemplates({ ...options, path }),
       addExportsToBarrelFile(`${backendFeaturesRoot}/${nameDash}/src/lib/backend-features-${nameDash}.ts`, [`./${nameDash}.module`]),
+      addBackendFeatureModuleToApiModule(options),
     ]);
   };
+}
+
+function addBackendFeatureModuleToApiModule(options: OptionsSchema) {
+  return (t: Tree) => {
+    const apiModulePath = 'apps/api/src/lambda-functions/lambda.module.ts';
+    if (!t.exists(apiModulePath)) {
+      throw new SchematicsException('api module not found at ' + apiModulePath);
+    }
+    const moduleName = `BackendFeature${strings.classify(options.name)}Module`;
+    const packageJson = JSON.parse(t.read('package.json').toString());
+    let content = t.read(apiModulePath).toString();
+    const featureModuleImport = `import { ${moduleName} } from '@${packageJson.name}/backend/features/${strings.dasherize(options.name)}';`;
+    content = content.replace(/imports: \[([^\]]*)\]/, ($1, $2) => 'imports: [' + $2 + '\t' + featureModuleImport + ',\n  ]');
+    content = content.replace(/imports: \[(.*)\]/, ($1) => $1 + '\n' + moduleName + ',');
+    t.overwrite(apiModulePath, content);
+    return t;
+  }
 }

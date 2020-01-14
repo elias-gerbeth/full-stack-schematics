@@ -26,10 +26,12 @@ Basis of all names is: Feature-name in singular: [name] (e.g. "product")
 - Entities: [Name]Entity with default primary generated uuid column "id" and prepared commented date fields and name field for starting quickly
 - QueryService: [Name]QueryService with functions like controller service
 
-## 1. Configure
+## 1. Configure before first run
 
-Configure the name of the app in the package.json ("name"), nx.json ("npmScope"), serverless.yml ("service") and angular.json ("prefix").
-You can conveniently run a "replace-all" from your IDE for "my-app" --> "your-app-name".
+- Configure the name of the app in the package.json ("name"), nx.json ("npmScope"), serverless.yml ("service") and angular.json ("prefix").
+You can conveniently run a "replace-all" from your IDE for: my-app --> [your-app-name].
+
+- Set up a local database with the name [your-app-name]-dev. I'm using PGAdmin4 to manage the Database, but you can use whatever you prefer.
 
 ## How to use
 
